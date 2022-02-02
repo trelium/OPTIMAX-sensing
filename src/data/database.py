@@ -2,7 +2,9 @@
 Database Management Utilities 
 Optimax project, Jan 2022   
 """
-import os 
+import os
+import string 
+import sys
 import mysql.connector as db
 from mysql.connector import errorcode, Error
 import logging
@@ -10,8 +12,8 @@ from dotenv import load_dotenv
 from queries import TABLES
 
 load_dotenv()
-
-logging.basicConfig(filename='database.log') # , encoding='utf-8', level=logging.INFO)
+logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
+logging.basicConfig(filename='preprocessing.log') # , encoding='utf-8', level=logging.INFO)
                     #format='%(asctime)s - %(levelname)s: %(message)s') #, datefmt='%d/%m/%Y %I:%M:%S %p'
 
 class SensingDB:
@@ -61,3 +63,30 @@ class SensingDB:
     def close_connection(self):
         self.cursor.close()
         self.cnx.close()
+
+    def insert(self, data:list, stream:string, columns:tuple = None):
+        """
+        Inserts the observations passed as a list in input to the correct table 
+        corresponding to the 'stream' argument. 
+        Arguemnts:
+        - stream: name of sensor stream as extracted from filename 
+        - data: list of tuples, each of the correct dimension  
+        - columns: optional. Specify in chich columns the data should fall into 
+
+        """
+        if stream in TABLES.keys():  #check stream 
+            obs = str(data)[1:-1]
+            if columns: 
+                qry = f"""INSERT INTO {stream} {columns} VALUES {obs}"""
+            else:
+                qry = f"""INSERT INTO {stream} VALUES {obs}"""
+            
+            try:    
+                self.cursor.execute(qry)
+                return True
+            except:
+                logging.warning(f"INSERT FAILED for observation: {obs} \nColumns: {columns}")
+                return False 
+        else:
+            logging.warning(f"INSERT FAILED: {stream} is not accepted as column name")
+            return False
