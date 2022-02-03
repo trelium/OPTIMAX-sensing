@@ -18,7 +18,6 @@ TABLES = {'accelerometer': """CREATE TABLE `PHONE_ACCELEROMETER` (
                                     `PACKAGE_NAME` varchar(250),
                                     `APPLICATION_NAME` varchar(150),
                                     `IS_SYSTEM_APP` boolean ,
-                                    `PACKAGE_NAME` varchar(200) ,
                                     `VERSION_NAME` varchar(100) ,
                                     `FIRST_INSTALL_TIME` char(13) ,
                                     `LAST_UPDATE_TIME` char(13) ,

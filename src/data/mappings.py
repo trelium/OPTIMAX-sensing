@@ -1,8 +1,20 @@
 RECORD_MAP = {
-    'Location' : {'record_path' : ['locations'], 'meta' : ['senseStartTimeMillis', 'deviceid', 'configAccuracy']},
-    'Apps' : {'record_path' : ['apps'], 'meta' : ['timestamp', 'userid']},
-    'WiFi' : {'record_path' : ['scanResult'], 'meta' : ['senseStartTimeMillis', 'userid']},
-    'Light' : {'record_path' : None, 'meta' : None},
-    'PhisicalActivity' : {'record_path' : None, 'meta' : None}
-
+    'Location' : {'frame' : {'record_path' : ['locations'], 'meta' : ['senseStartTimeMillis', 'userid', 'configAccuracy']},
+                'columns_sel' : ['senseStartTimeMillis', 'userid', 'latitude', 'longitude', 'bearing', 'speed', 'altitude', 'provider','configAccuracy']},
+    'InstalledApps' : {'frame' : {'record_path' : ['apps'], 'meta' : ['timestamp', 'userid']},
+                    'columns_sel' : ['timestamp', 'userid', 'packageName', 'appName', 'isPreInstalled', 'versionName', 'firstInstallTime', 'lastUpdateTime','isInactive','isRunning', 'isPersistent']},
+    'ActiveApps' : {'frame' : {'record_path' : ['apps'], 'meta' : ['timestamp', 'userid']},
+                'columns_sel' : ['timestamp', 'userid', 'packageName', 'appName', 'isPreInstalled', 'versionName', 'firstInstallTime', 'lastUpdateTime','isInactive','isRunning', 'isPersistent']},
+    'WiFi' : {'frame' : {'record_path' : ['scanResult'], 'meta' : ['senseStartTimeMillis', 'userid']},
+            'columns_sel' : ['senseStartTimeMillis', 'userid', 'ssid', 'bssid', 'capabilities', 'versionName', 'frequency', 'level']},
+    'Light' : {'frame' : {'record_path' : None, 'meta' : None},
+                'columns_sel' : ['senseStartTimeMillis', 'userid', 'light', 'accuracy']},
+    'PhysicalActivity' : {'frame' : {'record_path' : None, 'meta' : None},
+                            'columns_sel' : ['senseStartTimeMillis', 'userid', 'activityName', 'activityType', 'confidence']}, #special processing is done separately for this
+    'Proximity' : {'frame' : {'record_path' : None, 'meta' : None},
+            'columns_sel' : ['senseStartTimeMillis', 'userid', 'distance', 'maxRange']},
+    'Screen' : {'frame' : {'record_path' : None, 'meta' : None},
+            'columns_sel' : ['senseStartTimeMillis', 'userid', 'status']},          
+    'Calendar' : {'frame' : {'record_path' : ['events'], 'meta' : ['timestamp', 'userid']},
+            'columns_sel' : ['timestamp', 'userid']},             
 }

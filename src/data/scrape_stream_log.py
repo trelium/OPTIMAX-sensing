@@ -7,11 +7,10 @@ import logging
 import pandas as pd
 from mappings import RECORD_MAP
 
-#currently ony works for battery stream
 
 def sanitize_file(path, stream_name):
     """
-    Takes corrupt file and converts it to pandas dataframe according to the 
+    Takes a (potentially) corrupt file and converts it to pandas dataframe according to the 
     specified mappings  
     """
     try:
@@ -25,11 +24,14 @@ def sanitize_file(path, stream_name):
         logging.warning(f"Could not parse file: {path}")
         return None
 
-def select_datapoints(df):
+def select_datapoints(df, stream_name):
     """
     Takes in input a dataframe representing a portion of 
     sensor stream information and returns only the relevant information for analysis 
     """
+    #check if in column names there are all of the columns_sel, otherwise do create those that are missing and set null values
+    #log when this happens 
+     #special processing is done separately for activity that has messy schema, needs reordering 
     #return columns 
     return
 
