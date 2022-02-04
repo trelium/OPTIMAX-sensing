@@ -16,5 +16,17 @@ RECORD_MAP = {
     'Screen' : {'frame' : {'record_path' : None, 'meta' : None},
             'columns_sel' : ['senseStartTimeMillis', 'userid', 'status']},          
     'Calendar' : {'frame' : {'record_path' : ['events'], 'meta' : ['timestamp', 'userid']},
-            'columns_sel' : ['timestamp', 'userid']},             
-}
+            'columns_sel' : ['timestamp', 'userid']},     
+    'PhoneRadio' : {'frame' : {'record_path' : ['phoneRadioResult'], 'meta' : ['senseStartTimeMillis', 'userid']},
+            'columns_sel' : ['senseStartTimeMillis', 'userid']},    
+    'AppUsageStats' : {'frame' : {'record_path' : ['stats'], 'meta' : ['timestamp', 'userid']},
+            'columns_sel' : ['timestamp', 'userid']},   
+    'Battery' : {'frame' : {'record_path' : None, 'meta' : None},
+            'columns_sel' : ['senseStartTimeMillis', 'userid','status','level','scale']},   
+    'Bluetooth' : {'frame' : {'record_path' : ['devices'], 'meta' : ['userid']},
+            'columns_sel' : ['timeStamp', 'userid','address','name','rssi']}, 
+    'Accelerometer' : {'frame' : {'record_path' : None, 'meta' : None},
+            'columns_sel' : ['sensorTimeStamps', 'userid','xAxis','yAxis','zAxis']}
+            
+            
+}     

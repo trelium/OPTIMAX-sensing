@@ -1,18 +1,18 @@
-TABLES = {'accelerometer': """CREATE TABLE `PHONE_ACCELEROMETER` (
+TABLES = {'Accelerometer': """CREATE TABLE `PHONE_ACCELEROMETER` (
                                     `TIMESTAMP` char(13) NOT NULL, 
                                     `DEVICE_ID` varchar(40) NOT NULL,
                                     `DOUBLE_VALUES_0` double,
                                     `DOUBLE_VALUES_1` double,
                                     `DOUBLE_VALUES_2` double
                                     ) ENGINE=InnoDB""",
-        'bluetooth' : """CREATE TABLE `PHONE_BLUETOOTH` (
+        'Bluetooth' : """CREATE TABLE `PHONE_BLUETOOTH` (
                                     `TIMESTAMP` char(13) NOT NULL,
                                     `DEVICE_ID` varchar(40) NOT NULL,
                                     `BT_ADDRESS` varchar(150) ,
                                     `BT_NAME` varchar(150) ,
                                     `BT_RSSI` mediumint
                                     ) ENGINE=InnoDB""",                                    
-        'applications' : """CREATE TABLE `PHONE_APPLICATIONS` (
+        'InstalledApps' : """CREATE TABLE `PHONE_APPLICATIONS` (
                                     `TIMESTAMP` char(13) NOT NULL,
                                     `DEVICE_ID` varchar(40) NOT NULL,
                                     `PACKAGE_NAME` varchar(250),
@@ -25,24 +25,24 @@ TABLES = {'accelerometer': """CREATE TABLE `PHONE_ACCELEROMETER` (
                                     `IS_RUNNING` boolean ,
                                     `IS_PERSISTENT` boolean ,
                                     ) ENGINE=InnoDB""",
-        'appusage' : """CREATE TABLE `APP_USAGE_STATS` (
+        'AppUsageStats' : """CREATE TABLE `APP_USAGE_STATS` (
                                     `TIMESTAMP` char(13) NOT NULL,
                                     `DEVICE_ID` varchar(40) NOT NULL,
                                     `APPLICATION_NAME` varchar(150),
                                     `USAGE` float,
                                     ) ENGINE=InnoDB""",  
-        'battery' : """CREATE TABLE `PHONE_BATTERY` (
+        'Battery' : """CREATE TABLE `PHONE_BATTERY` (
                             `TIMESTAMP` char(13) NOT NULL,
                             `DEVICE_ID` varchar(40) NOT NULL,
                             `BATTERY_STATUS` tinyint,
                             `BATTERY_LEVEL` tinyint,
                             `BATTERY_SCALE` tinyint,
                             ) ENGINE=InnoDB""",  
-        'phoneradio' : """CREATE TABLE `PHONE_RADIO` (
+        'PhoneRadio' : """CREATE TABLE `PHONE_RADIO` (
                             `TIMESTAMP` char(13) NOT NULL,
                             `DEVICE_ID` varchar(40) NOT NULL,
                             ) ENGINE=InnoDB""",  
-        'wifi' : """CREATE TABLE `PHONE_WIFI_VISIBLE` (
+        'WiFi' : """CREATE TABLE `PHONE_WIFI_VISIBLE` (
                             `TIMESTAMP` char(200) NOT NULL,
                             `DEVICE_ID` varchar(40) NOT NULL,
                             `SSID` varchar(250) ,
@@ -51,17 +51,17 @@ TABLES = {'accelerometer': """CREATE TABLE `PHONE_ACCELEROMETER` (
                             `FREQUENCY` mediumint ,
                             `RSSI` mediumint ,
                             ) ENGINE=InnoDB""",            
-        'calendar' : """CREATE TABLE `PHONE_CALENDAR` (
+        'Calendar' : """CREATE TABLE `PHONE_CALENDAR` (
                             `TIMESTAMP` char(13) NOT NULL,
                             `DEVICE_ID` varchar(40) NOT NULL,
                             ) ENGINE=InnoDB""",  
-        'light' : """CREATE TABLE `PHONE_LIGHT` (
+        'Light' : """CREATE TABLE `PHONE_LIGHT` (
                             `TIMESTAMP` char(13) NOT NULL,
                             `DEVICE_ID` varchar(40) NOT NULL,
                             `DOUBLE_LIGHT_LUX` float ,
                             `ACCURACY` smallint ,
                             ) ENGINE=InnoDB""",       
-        'location' : """CREATE TABLE `PHONE_LOCATIONS` (
+        'Location' : """CREATE TABLE `PHONE_LOCATIONS` (
                             `TIMESTAMP` char(13) NOT NULL,
                             `DEVICE_ID` varchar(40) NOT NULL,
                             `DOUBLE_LATITUDE` decimal(17,15) ,
@@ -72,18 +72,18 @@ TABLES = {'accelerometer': """CREATE TABLE `PHONE_ACCELEROMETER` (
                             `PROVIDER` varchar(50) ,
                             `ACCURACY` float ,
                             ) ENGINE=InnoDB""",  
-        'screen' : """CREATE TABLE `PHONE_SCREEN` (
+        'Screen' : """CREATE TABLE `PHONE_SCREEN` (
                             `TIMESTAMP` char(13) NOT NULL,
                             `DEVICE_ID` varchar(40) NOT NULL,
                             `SCREEN_STATUS` smallint ,
                             ) ENGINE=InnoDB""", 
-        'proximity' : """CREATE TABLE `PHONE_PROXIMITY` (
+        'Proximity' : """CREATE TABLE `PHONE_PROXIMITY` (
                             `TIMESTAMP` char(13) NOT NULL,
                             `DEVICE_ID` varchar(40) NOT NULL,
                             `DISTANCE` float ,
                             `MAX_RANGE` float ,
                             ) ENGINE=InnoDB""",    
-        'physicalactivity' : """CREATE TABLE `PHONE_ACTIVITY_RECOGNITION` (
+        'PhysicalActivity' : """CREATE TABLE `PHONE_ACTIVITY_RECOGNITION` (
                             `TIMESTAMP` char(13) NOT NULL,
                             `DEVICE_ID` varchar(40) NOT NULL,
                             `ACTIVITY_NAME` varchar(20) ,
