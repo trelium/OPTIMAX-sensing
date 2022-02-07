@@ -68,7 +68,7 @@ class SensingDB:
         """
         Inserts the observations passed as a list in input to the correct table 
         corresponding to the 'stream' argument. 
-        Arguemnts:
+        Arguments:
         - stream: name of sensor stream as extracted from filename 
         - data: list of tuples, each of the correct dimension  
         - columns: optional. Specify in chich columns the data should fall into 
