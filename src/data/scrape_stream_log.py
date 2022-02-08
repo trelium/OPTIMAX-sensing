@@ -72,7 +72,7 @@ def select_datapoints(df, stream_name):
         logging.error(f"conversion to records of stream {stream_name} failed. \nDataframe:\n{df}")
         return None
 
-
+"""
 #df = sanitize_file('/home/jmocel/trelium/OPTIMAX-sensing/data/optimax_ps_data/2021_files/7_2021-02-11/601c471f3800bbe3308580b9-om_10/601c471f3800bbe3308580b9-om_ActiveApps_1613035924518/601c471f3800bbe3308580b9-om_ActiveApps_1613035924518.json', 'Apps')
 df = sanitize_file('/home/jmocel/trelium/OPTIMAX-sensing/data/optimax_ps_data/2021_files/-2_2021-03-02/603b6eb07708a774b94fa0d8-om_01/603b6eb07708a774b94fa0d8-om_WiFi_1614644099658/603b6eb07708a774b94fa0d8-om_WiFi_1614644099658.json', 'WiFi')
 #df = sanitize_file('/home/jmocel/trelium/OPTIMAX-sensing/data/optimax_ps_data/2021_files/7_2021-02-07/601c471f3800bbe3308580b9-om_14/601c471f3800bbe3308580b9-om_Light_1612703751977/601c471f3800bbe3308580b9-om_Light_1612703751977.json', 'Light')
@@ -83,3 +83,4 @@ print(df.columns)
 
 pprint(select_datapoints(df,'WiFi'))
 
+"""

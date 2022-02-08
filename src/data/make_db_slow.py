@@ -46,29 +46,14 @@ def chunk_file_index(path, streams):
                 if sanitize_filename(file) in streams:
                     to_analyze.append(os.path.join(root, file))
     
-    #return to_analyze
-    n = cpu_count()
-    k, m = divmod(len(to_analyze), n)
-    return len(to_analyze), (to_analyze[i*k+min(i, m):(i+1)*k+min(i+1, m)] for i in range(n))
-    
-    
+    return to_analyze
 
-def analyze_files(paths:list):
-    db = SensingDB()
-    logging.info('Database correctly instantiated')
-    for file in paths: #paths is in fact string type, file is in fact a character
-        stream_name = sanitize_filename(file)
-        try:
-            df = sanitize_file(file, stream_name)
-            if not db.insert(data = select_datapoints(df, stream_name), stream = stream_name):
-                logging.error(f'Data upload failure for file {file}')
-            else:
-                return 1
-        except:
-            continue
-    db.close_connection()
 
-                    
+def analyze_files(path,db):
+    stream_name = sanitize_filename(path)
+    df = sanitize_file(path, stream_name)
+    db.insert(data = select_datapoints(df, stream_name), stream = stream_name)
+
 
 def main():
     logging.basicConfig(filename='preprocessing.log', 
@@ -82,16 +67,15 @@ def main():
     parser.add_argument("--streams", help="Specify individual streams for which files should be processed.", nargs="+", default=RECORD_MAP.keys())   
     args = parser.parse_args()
 
-    total, paths_chunks = chunk_file_index(args.path, args.streams)
-    #print(type(paths_chunks))
-    #print(type(paths_chunks[3]))
-    #print(paths_chunks[3])
+    paths_chunks = chunk_file_index(args.path, args.streams)
     ##get all lists and pass them to pool
-    with Pool(cpu_count()) as p:
-        print(f'Analyzing {total} files:')
-        #for _ in tqdm(p.imap(analyze_files,paths_chunks), total = len(paths_chunks)):
-        #    pass
-        r = list(tqdm(p.map(analyze_files,paths_chunks), total = total))
+    
+    print(f'Analyzing {len(paths_chunks)} files')
+    db = SensingDB()
+    logging.info('Database correctly instantiated')
+    for i in tqdm(paths_chunks):
+        analyze_files(i, db)
+    db.close_connection()
     print('Execution complete.')
 
 

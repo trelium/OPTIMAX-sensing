@@ -4,14 +4,14 @@ TABLES = {'Accelerometer': """CREATE TABLE `PHONE_ACCELEROMETER` (
                                     `DOUBLE_VALUES_0` double,
                                     `DOUBLE_VALUES_1` double,
                                     `DOUBLE_VALUES_2` double
-                                    ) ENGINE=InnoDB""",
+                                    ) ENGINE=InnoDB;""",
         'Bluetooth' : """CREATE TABLE `PHONE_BLUETOOTH` (
                                     `TIMESTAMP` char(13) NOT NULL,
                                     `DEVICE_ID` varchar(40) NOT NULL,
                                     `BT_ADDRESS` varchar(150) ,
                                     `BT_NAME` varchar(150) ,
                                     `BT_RSSI` mediumint
-                                    ) ENGINE=InnoDB""",                                    
+                                    ) ENGINE=InnoDB;""",                                    
         'InstalledApps' : """CREATE TABLE `PHONE_APPLICATIONS` (
                                     `TIMESTAMP` char(13) NOT NULL,
                                     `DEVICE_ID` varchar(40) NOT NULL,
@@ -23,25 +23,25 @@ TABLES = {'Accelerometer': """CREATE TABLE `PHONE_ACCELEROMETER` (
                                     `LAST_UPDATE_TIME` char(13) ,
                                     `IS_INACTIVE` boolean ,
                                     `IS_RUNNING` boolean ,
-                                    `IS_PERSISTENT` boolean ,
-                                    ) ENGINE=InnoDB""",
+                                    `IS_PERSISTENT` boolean 
+                                    ) ENGINE=InnoDB;""",
         'AppUsageStats' : """CREATE TABLE `APP_USAGE_STATS` (
                                     `TIMESTAMP` char(13) NOT NULL,
                                     `DEVICE_ID` varchar(40) NOT NULL,
                                     `APPLICATION_NAME` varchar(150),
-                                    `USAGE` float,
-                                    ) ENGINE=InnoDB""",  
+                                    `USAGE` float
+                                    ) ENGINE=InnoDB;""",  
         'Battery' : """CREATE TABLE `PHONE_BATTERY` (
                             `TIMESTAMP` char(13) NOT NULL,
                             `DEVICE_ID` varchar(40) NOT NULL,
                             `BATTERY_STATUS` tinyint,
                             `BATTERY_LEVEL` tinyint,
-                            `BATTERY_SCALE` tinyint,
-                            ) ENGINE=InnoDB""",  
+                            `BATTERY_SCALE` tinyint
+                            ) ENGINE=InnoDB;""",  
         'PhoneRadio' : """CREATE TABLE `PHONE_RADIO` (
                             `TIMESTAMP` char(13) NOT NULL,
-                            `DEVICE_ID` varchar(40) NOT NULL,
-                            ) ENGINE=InnoDB""",  
+                            `DEVICE_ID` varchar(40) NOT NULL
+                            ) ENGINE=InnoDB;""",  
         'WiFi' : """CREATE TABLE `PHONE_WIFI_VISIBLE` (
                             `TIMESTAMP` char(200) NOT NULL,
                             `DEVICE_ID` varchar(40) NOT NULL,
@@ -49,18 +49,18 @@ TABLES = {'Accelerometer': """CREATE TABLE `PHONE_ACCELEROMETER` (
                             `BSSID` varchar(250) ,
                             `SECURITY` varchar(200) ,
                             `FREQUENCY` mediumint ,
-                            `RSSI` mediumint ,
-                            ) ENGINE=InnoDB""",            
+                            `RSSI` mediumint 
+                            ) ENGINE=InnoDB;""",            
         'Calendar' : """CREATE TABLE `PHONE_CALENDAR` (
                             `TIMESTAMP` char(13) NOT NULL,
-                            `DEVICE_ID` varchar(40) NOT NULL,
-                            ) ENGINE=InnoDB""",  
+                            `DEVICE_ID` varchar(40) NOT NULL
+                            ) ENGINE=InnoDB;""",  
         'Light' : """CREATE TABLE `PHONE_LIGHT` (
                             `TIMESTAMP` char(13) NOT NULL,
                             `DEVICE_ID` varchar(40) NOT NULL,
                             `DOUBLE_LIGHT_LUX` float ,
-                            `ACCURACY` smallint ,
-                            ) ENGINE=InnoDB""",       
+                            `ACCURACY` smallint
+                            ) ENGINE=InnoDB;""",       
         'Location' : """CREATE TABLE `PHONE_LOCATIONS` (
                             `TIMESTAMP` char(13) NOT NULL,
                             `DEVICE_ID` varchar(40) NOT NULL,
@@ -70,24 +70,24 @@ TABLES = {'Accelerometer': """CREATE TABLE `PHONE_ACCELEROMETER` (
                             `DOUBLE_SPEED` float ,
                             `DOUBLE_ALTITUDE` float ,
                             `PROVIDER` varchar(50) ,
-                            `ACCURACY` float ,
-                            ) ENGINE=InnoDB""",  
+                            `ACCURACY` float 
+                            ) ENGINE=InnoDB;""",  
         'Screen' : """CREATE TABLE `PHONE_SCREEN` (
                             `TIMESTAMP` char(13) NOT NULL,
                             `DEVICE_ID` varchar(40) NOT NULL,
-                            `SCREEN_STATUS` smallint ,
-                            ) ENGINE=InnoDB""", 
+                            `SCREEN_STATUS` smallint 
+                            ) ENGINE=InnoDB;""", 
         'Proximity' : """CREATE TABLE `PHONE_PROXIMITY` (
                             `TIMESTAMP` char(13) NOT NULL,
                             `DEVICE_ID` varchar(40) NOT NULL,
                             `DISTANCE` float ,
-                            `MAX_RANGE` float ,
-                            ) ENGINE=InnoDB""",    
+                            `MAX_RANGE` float 
+                            ) ENGINE=InnoDB;""",    
         'PhysicalActivity' : """CREATE TABLE `PHONE_ACTIVITY_RECOGNITION` (
                             `TIMESTAMP` char(13) NOT NULL,
                             `DEVICE_ID` varchar(40) NOT NULL,
                             `ACTIVITY_NAME` varchar(20) ,
                             `ACTIVITY_TYPE` tinyint ,
-                            `CONFIDENCE` tinyint ,
-                            ) ENGINE=InnoDB""",                                
+                            `CONFIDENCE` tinyint 
+                            ) ENGINE=InnoDB;""",                                
         }

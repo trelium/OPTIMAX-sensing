@@ -4,17 +4,14 @@ Optimax project, Jan 2022
 """
 import os
 import string 
-import sys
 import mysql.connector as db
 from mysql.connector import errorcode, Error
 import logging
 from dotenv import load_dotenv
 from queries import TABLES
+from mappings import RECORD_MAP
 
 load_dotenv()
-logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
-logging.basicConfig(filename='preprocessing.log') # , encoding='utf-8', level=logging.INFO)
-                    #format='%(asctime)s - %(levelname)s: %(message)s') #, datefmt='%d/%m/%Y %I:%M:%S %p'
 
 class SensingDB:
     def __init__(self) -> None:
@@ -45,20 +42,17 @@ class SensingDB:
                     logging.warning(f"Creation of DB failed")
                     exit(1)
             else: 
-                logging.warning(err_in)
+                logging.warning(f'MySQL error:\n{err_in}')
 
         #check if table is already present, otherwise create table 
-        for qry in TABLES:
+        for streamname in TABLES:
             try:
-                print("Creating table: ", qry)
-                self.cursor.execute(TABLES[qry])
+                self.cursor.execute(TABLES[streamname])
+                logging.info(f"Created table for: {streamname}")
             except Error as err:
-                if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
-                    print("already exists.")
-                else:
-                    print(err.msg)
-            else:
-                print("OK")
+                if err.errno != errorcode.ER_TABLE_EXISTS_ERROR:
+                    logging.error(err.msg)
+        logging.info('Table existence checks completed')
 
     def close_connection(self):
         self.cursor.close()
@@ -74,19 +68,19 @@ class SensingDB:
         - columns: optional. Specify in chich columns the data should fall into 
 
         """
-        if stream in TABLES.keys():  #check stream 
+        if stream in RECORD_MAP.keys():  #check if there is a table for the stream 
             obs = str(data)[1:-1]
             if columns: 
-                qry = f"""INSERT INTO {stream} {columns} VALUES {obs}"""
+                qry = f"""INSERT INTO {RECORD_MAP[stream]['target_table']} {columns} VALUES {obs}""".replace('None','NULL')
             else:
-                qry = f"""INSERT INTO {stream} VALUES {obs}"""
+                qry = f"""INSERT INTO {RECORD_MAP[stream]['target_table']} VALUES {obs}""".replace('None','NULL')
             
             try:    
                 self.cursor.execute(qry)
                 return True
-            except:
-                logging.warning(f"INSERT FAILED for observation: {obs} \nColumns: {columns}")
+            except Error as err:
+                logging.error(f"INSERT FAILED for observation: {obs} \nColumns: {columns}\nError: {err.msg}")
                 return False 
         else:
-            logging.warning(f"INSERT FAILED: {stream} is not accepted as column name")
+            logging.error(f"INSERT FAILED: No table created for the given stream: {stream}")
             return False
