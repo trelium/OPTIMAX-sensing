@@ -52,12 +52,14 @@ def chunk_file_index(path, streams):
 def analyze_files(path,db):
     stream_name = sanitize_filename(path)
     df = sanitize_file(path, stream_name)
-    db.insert(data = select_datapoints(df, stream_name), stream = stream_name)
+    if df is not None:
+        if not db.insert(data = select_datapoints(df, stream_name), stream = stream_name):
+            logging.error(f'Could not insert observations present in file: {path}')
 
 
 def main():
     logging.basicConfig(filename='preprocessing.log', 
-                        level=logging.ERROR,filemode='w',
+                        level=logging.DEBUG,filemode='w',
                         format='%(asctime)s - %(levelname)s - %(message)s', 
                         datefmt='%d/%m/%Y %I:%M:%S %p') 
     logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))

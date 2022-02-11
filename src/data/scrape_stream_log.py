@@ -28,7 +28,7 @@ def sanitize_file(path, stream_name):
             out_df = pd.json_normalize(data, RECORD_MAP[stream_name]['frame']['record_path'], RECORD_MAP[stream_name]['frame']['meta'])
             return out_df
     except:
-        logging.error(f"Could not parse file: {path}")
+        logging.error(f"Could not insert observations present in file (Could not parse file): {path}")
         return None
 
 def select_datapoints(df, stream_name):

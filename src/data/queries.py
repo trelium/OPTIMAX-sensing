@@ -28,19 +28,19 @@ TABLES = {'Accelerometer': """CREATE TABLE `PHONE_ACCELEROMETER` (
         'AppUsageStats' : """CREATE TABLE `APP_USAGE_STATS` (
                                     `TIMESTAMP` char(13) NOT NULL,
                                     `DEVICE_ID` varchar(40) NOT NULL,
-                                    `APPLICATION_NAME` varchar(150),
-                                    `USAGE` float
+                                    `STATS` json
                                     ) ENGINE=InnoDB;""",  
         'Battery' : """CREATE TABLE `PHONE_BATTERY` (
                             `TIMESTAMP` char(13) NOT NULL,
                             `DEVICE_ID` varchar(40) NOT NULL,
-                            `BATTERY_STATUS` tinyint,
+                            `BATTERY_STATUS` varchar(150), 
                             `BATTERY_LEVEL` tinyint,
                             `BATTERY_SCALE` tinyint
                             ) ENGINE=InnoDB;""",  
         'PhoneRadio' : """CREATE TABLE `PHONE_RADIO` (
                             `TIMESTAMP` char(13) NOT NULL,
-                            `DEVICE_ID` varchar(40) NOT NULL
+                            `DEVICE_ID` varchar(40) NOT NULL,
+                            `RADIO_RESULTS` JSON 
                             ) ENGINE=InnoDB;""",  
         'WiFi' : """CREATE TABLE `PHONE_WIFI_VISIBLE` (
                             `TIMESTAMP` char(200) NOT NULL,
@@ -53,7 +53,8 @@ TABLES = {'Accelerometer': """CREATE TABLE `PHONE_ACCELEROMETER` (
                             ) ENGINE=InnoDB;""",            
         'Calendar' : """CREATE TABLE `PHONE_CALENDAR` (
                             `TIMESTAMP` char(13) NOT NULL,
-                            `DEVICE_ID` varchar(40) NOT NULL
+                            `DEVICE_ID` varchar(40) NOT NULL,
+                            `EVENTS` JSON
                             ) ENGINE=InnoDB;""",  
         'Light' : """CREATE TABLE `PHONE_LIGHT` (
                             `TIMESTAMP` char(13) NOT NULL,
