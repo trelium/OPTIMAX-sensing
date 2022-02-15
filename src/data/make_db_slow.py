@@ -12,6 +12,7 @@ import argparse
 from multiprocessing import Pool, cpu_count
 from scrape_stream_log import *
 from tqdm import tqdm 
+import pickle
 
 def dir_path(path):
     if os.path.isdir(path):
@@ -40,12 +41,16 @@ def chunk_file_index(path, streams):
 
     to_analyze = []
     logging.info('Building files index')
-    for (root,dirs,files) in tqdm(os.walk(path)):
+    for (root,dirs,files) in os.walk(path):
+        currentdir = root.split(os.path.sep)[-1]
+        print(f"Analyzig sub-directory: {currentdir}",  end='\r')
         for file in files:
             if file.endswith('.json'):
                 if sanitize_filename(file) in streams:
                     to_analyze.append(os.path.join(root, file))
-    
+    print()
+    with open('allpaths.pkl', 'wb') as f:
+        pickle.dump(to_analyze, f)
     return to_analyze
 
 
@@ -62,16 +67,21 @@ def main():
                         level=logging.DEBUG,filemode='w',
                         format='%(asctime)s - %(levelname)s - %(message)s', 
                         datefmt='%d/%m/%Y %I:%M:%S %p') 
-    logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
+    #logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
 
     parser = argparse.ArgumentParser()
     parser.add_argument("path", help="Directory containing files to be processed. Make sure you have read privileges to it.", type=dir_path)
-    parser.add_argument("--streams", help="Specify individual streams for which files should be processed.", nargs="+", default=RECORD_MAP.keys())   
+    parser.add_argument("--streams", help="Specify individual streams for which files should be processed.", nargs="+", default=RECORD_MAP.keys()) 
+    parser.add_argument("--pickle", help="Path to binarized list containing paths to files to be analyzed")
+  
     args = parser.parse_args()
 
-    paths_chunks = chunk_file_index(args.path, args.streams)
-    ##get all lists and pass them to pool
-    
+    if args.pickle is not None:
+        paths_chunks = pickle.load(open(args.pickle,'rb'))
+    else:
+        paths_chunks = chunk_file_index(args.path, args.streams)
+
+    logging.info(f'Found {len(paths_chunks)} files for the selected streams')
     print(f'Analyzing {len(paths_chunks)} files')
     db = SensingDB()
     logging.info('Database correctly instantiated')

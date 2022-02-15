@@ -3,6 +3,7 @@ Database population routine
 Optimax project, Jan 2022   
 """
 
+from lib2to3.pgen2.token import NEWLINE
 import logging
 import sys
 import os 
@@ -40,12 +41,14 @@ def chunk_file_index(path, streams):
 
     to_analyze = []
     logging.info('Building files index')
-    for (root,dirs,files) in tqdm(os.walk(path)):
+    for (root,dirs,files) in os.walk(path):
+        currentdir = root.split(os.path.sep)[-1]
+        print(f"Analyzig sub-directory: {currentdir}",  end='\x1b[1K\r')
         for file in files:
             if file.endswith('.json'):
                 if sanitize_filename(file) in streams:
                     to_analyze.append(os.path.join(root, file))
-    
+    print()
     #return to_analyze
     n = cpu_count()
     k, m = divmod(len(to_analyze), n)
@@ -72,7 +75,7 @@ def analyze_files(paths:list):
 
 def main():
     logging.basicConfig(filename='preprocessing.log', 
-                        level=logging.ERROR,filemode='w',
+                        level=logging.DEBUG,filemode='w',
                         format='%(asctime)s - %(levelname)s - %(message)s', 
                         datefmt='%d/%m/%Y %I:%M:%S %p') 
     logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))

@@ -18,6 +18,8 @@ load_dotenv()
 def sanitize_obs(obs):
     obs = str(obs)[1:-1]
     obs = obs.replace('list(','').replace('])',']').replace('None','NULL')
+    obs = obs.replace('[]', 'JSON_ARRAY()')
+    obs = obs.replace('nan','NULL')
     return obs
     
 

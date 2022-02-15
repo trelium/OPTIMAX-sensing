@@ -9,11 +9,6 @@ from mappings import RECORD_MAP
 from pprint import pprint
 import sys 
 
-"""
-logging.basicConfig(filename='preprocessing.log', level=logging.DEBUG,filemode='w',format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%d/%m/%Y %I:%M:%S %p') 
-                    #format='%(asctime)s - %(levelname)s: %(message)s') #, datefmt='%d/%m/%Y %I:%M:%S %p'
-logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
-"""
 
 def sanitize_file(path, stream_name):
     """
@@ -38,8 +33,13 @@ def select_datapoints(df, stream_name):
     """
     #check if in column names there are all of the columns_sel, otherwise do create those that are missing and set null values
     #if set(df.columns) != set(RECORD_MAP[stream_name]['columns_sel']) and stream_name != 'PhysicalActivity':
-    missing_cols = set(RECORD_MAP[stream_name]['columns_sel']) - set(df.columns)
-    if len(missing_cols) != 0  and stream_name != 'PhysicalActivity':
+    if df is not None:
+        missing_cols = set(RECORD_MAP[stream_name]['columns_sel']) - set(df.columns)
+    else:
+        return None
+    
+    exceptions = set(['PhysicalActivity', 'Accelerometer'])
+    if len(missing_cols) != 0  and stream_name not in exceptions:
         try:
             missing_cols = list(missing_cols)
             df[missing_cols] = None
@@ -52,35 +52,37 @@ def select_datapoints(df, stream_name):
         #'senseStartTimeMillis', 'userid', 'activityName', 'activityType', 'confidence' is target schema   
         activity_map = {'in_vehicle':0, 'on_bicycle':1, 'on_foot':2, 'still':3, 'unknown':4, 'tilting':5, 'walking':6, 'running':7}
         try: 
-            missing_cols = set(activity_map.keys()) - set([item.lower() for item in df.columns]) 
+            df.columns = df.columns.str.lower()
+            missing_cols = set(activity_map.keys()) - set(df.columns) 
             if len(missing_cols) != 0:
                 missing_cols = list(missing_cols)
                 df[missing_cols] = None
-            pd.melt(df, id_vars=['senseStartTimeMillis', 'userid'], 
+            df = pd.melt(df, id_vars=['sensestarttimemillis', 'userid'], 
                     value_vars=list(activity_map.keys()), 
-                    var_name='activityName', 
+                    var_name='activityname', 
                     value_name='confidence')
-            df['activityType'] = [activity_map[key] for key in df['activityName']]
+            df['activitytype'] = [activity_map[key] for key in df['activityname']]
         except:
             logging.error(f"Refactoring of {stream_name} failed. \nDataframe:\n{df}")
 
+    elif stream_name == 'Accelerometer':
+        try:
+            acc_new = pd.DataFrame({'sensorTimeStamps' : df['sensorTimeStamps'][0],
+                        'xAxis' : df['xAxis'][0],
+                        'yAxis' : df['yAxis'][0],
+                        'zAxis' : df['zAxis'][0]
+                        })
+            acc_new['userid'] = df['userid'][0]
+            df = acc_new
+        except ValueError:
+            logging.error('Inconsistencies in dimension of records for Accelerometer stream')
+            df = None
+    
     try:
         df = df[RECORD_MAP[stream_name]['columns_sel']]
         records = df.to_records(index=False)  #return rows as list of tuples
         return list(records)
     except:
-        logging.error(f"conversion to records of stream {stream_name} failed. \nDataframe:\n{df}")
+        logging.error(f"Conversion to records of stream {stream_name} failed. \nDataframe:\n{df}")
         return None
 
-"""
-#df = sanitize_file('/home/jmocel/trelium/OPTIMAX-sensing/data/optimax_ps_data/2021_files/7_2021-02-11/601c471f3800bbe3308580b9-om_10/601c471f3800bbe3308580b9-om_ActiveApps_1613035924518/601c471f3800bbe3308580b9-om_ActiveApps_1613035924518.json', 'Apps')
-df = sanitize_file('/home/jmocel/trelium/OPTIMAX-sensing/data/optimax_ps_data/2021_files/-2_2021-03-02/603b6eb07708a774b94fa0d8-om_01/603b6eb07708a774b94fa0d8-om_WiFi_1614644099658/603b6eb07708a774b94fa0d8-om_WiFi_1614644099658.json', 'WiFi')
-#df = sanitize_file('/home/jmocel/trelium/OPTIMAX-sensing/data/optimax_ps_data/2021_files/7_2021-02-07/601c471f3800bbe3308580b9-om_14/601c471f3800bbe3308580b9-om_Light_1612703751977/601c471f3800bbe3308580b9-om_Light_1612703751977.json', 'Light')
-#0df = sanitize_file('/home/jmocel/trelium/OPTIMAX-sensing/data/optimax_ps_data/2021_files/7_2021-02-10/601c471f3800bbe3308580b9-om_15/601c471f3800bbe3308580b9-om_PhysicalActivity_1612967373364/601c471f3800bbe3308580b9-om_PhysicalActivity_1612967373364.json', 'PhisicalActivity')
-#df = sanitize_file('/home/jmocel/trelium/OPTIMAX-sensing/data/optimax_ps_data/2021_files/7_2021-02-10/601c471f3800bbe3308580b9-om_15/601c471f3800bbe3308580b9-om_Accelerometer_1612967938706/601c471f3800bbe3308580b9-om_Accelerometer_1612967938706.json', 'Accelerometer')
-print(df)
-print(df.columns)
-
-pprint(select_datapoints(df,'WiFi'))
-
-"""

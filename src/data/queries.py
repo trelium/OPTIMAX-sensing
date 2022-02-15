@@ -60,23 +60,24 @@ TABLES = {'Accelerometer': """CREATE TABLE `PHONE_ACCELEROMETER` (
                             `TIMESTAMP` char(13) NOT NULL,
                             `DEVICE_ID` varchar(40) NOT NULL,
                             `DOUBLE_LIGHT_LUX` float ,
-                            `ACCURACY` smallint
+                            `ACCURACY` smallint ,
+                            `MAX_RANGE` mediumint
                             ) ENGINE=InnoDB;""",       
         'Location' : """CREATE TABLE `PHONE_LOCATIONS` (
                             `TIMESTAMP` char(13) NOT NULL,
                             `DEVICE_ID` varchar(40) NOT NULL,
                             `DOUBLE_LATITUDE` decimal(17,15) ,
                             `DOUBLE_LONGITUDE` decimal(17,15) ,
-                            `DOUBLE_BEARING` decimal(17,15) ,
+                            `DOUBLE_BEARING` decimal(25,15) ,
                             `DOUBLE_SPEED` float ,
                             `DOUBLE_ALTITUDE` float ,
                             `PROVIDER` varchar(50) ,
-                            `ACCURACY` float 
+                            `ACCURACY` varchar(100) 
                             ) ENGINE=InnoDB;""",  
         'Screen' : """CREATE TABLE `PHONE_SCREEN` (
                             `TIMESTAMP` char(13) NOT NULL,
                             `DEVICE_ID` varchar(40) NOT NULL,
-                            `SCREEN_STATUS` smallint 
+                            `SCREEN_STATUS` varchar(50) 
                             ) ENGINE=InnoDB;""", 
         'Proximity' : """CREATE TABLE `PHONE_PROXIMITY` (
                             `TIMESTAMP` char(13) NOT NULL,
