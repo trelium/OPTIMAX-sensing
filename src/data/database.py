@@ -11,7 +11,7 @@ import logging
 from dotenv import load_dotenv
 from queries import TABLES
 from mappings import RECORD_MAP
-import re
+import pandas as pd
 
 load_dotenv()
 
@@ -73,6 +73,9 @@ class SensingDB:
         except Error as err:
             logging.error(f'Error while finalizing SQL upoad: {err.msg}')
 
+    def query(self, qry):
+        self.cursor.execute(qry)
+
     def insert(self, data:list, stream:string, columns:tuple = None):
         """
         Inserts the observations passed as a list in input to the correct table 
@@ -99,3 +102,79 @@ class SensingDB:
         else:
             logging.error(f"INSERT FAILED: No table created for the given stream: {stream}")
             return False
+    
+    def get_all_timestamps(self, table:string):
+        """
+        Warning:inefficient on large tables 
+        Returns the device_id and timestamp columns from the selected table in the form of a pandas dataframe 
+        Arguments:
+        - table: string. Name of the target table from which to extract the requested information 
+        """
+        qry = f"""SELECT TIMESTAMP, DEVICE_ID FROM {table}"""
+        try:    
+            self.cursor.execute(qry)
+            ret = self.cursor.fetchall()
+            ret = pd.DataFrame(ret, columns=['TIMESTAMP', 'DEVICE_ID'])
+            return ret
+        except Error as err:
+            logging.error(f"select failed for table {table}\nErrorMsg: {err.msg}")
+            return False 
+
+    def get_all_device_ids(self):
+        """Returns a list of all device ids present in the database (across all tables)"""
+        #all_tables = str([RECORD_MAP[i]['target_table'] for i in RECORD_MAP]).replace("'", "").replace("[","").replace("]","")
+        #qry = f"""SELECT DISTINCT DEVICE_ID FROM {all_tables};""" #SELECT city FROM tableA UNION SELECT city FROM tableB UNION SELECT city FROM tableC
+        
+        all_tables = [RECORD_MAP[i]['target_table'] for i in RECORD_MAP]
+        qry = str()
+        for i in all_tables:
+            qry += f"SELECT DEVICE_ID FROM {i} UNION "
+        qry = qry[:-6]
+        self.cursor.execute(qry)
+        ret = self.cursor.fetchall()
+        return ret
+
+    def get_sensing_timespan(self, table = None, exact = True):
+        """Returns the start and end date of sensing for each participant in the database, across all tables present 
+        If exact is set to true, return all daily time windows for which there is passive sensing data.
+        Returns list of tuples 
+        """
+        all_tables = [RECORD_MAP[i]['target_table'] for i in RECORD_MAP]
+        qry = str()
+        if table: 
+            if exact == False:
+                qry = f"""SELECT DEVICE_ID, FROM_UNIXTIME(min(TIMESTAMP/1000)) min, FROM_UNIXTIME(max(TIMESTAMP/1000)) max
+                        FROM `{table}` GROUP BY DEVICE_ID """
+            else:
+                qry = f"""WITH t AS (
+                            with tt as (
+                            select device_id,substr(from_unixtime(TIMESTAMP/1000),1,10) dd
+                            FROM {table}
+                            GROUP BY device_id,substr(from_unixtime(TIMESTAMP/1000),1,10)
+                            order by 1,2
+                            )
+                            SELECT device_id,dd as d,ROW_NUMBER() OVER(ORDER BY device_id,dd) i,DATE_SUB(dd,INTERVAL ROW_NUMBER() OVER(ORDER BY device_id,dd) DAY ) as ii
+                            FROM tt
+                            GROUP BY device_id,dd
+                            )
+                            SELECT device_id,MIN(d),MAX(d)
+                            FROM t
+                            GROUP BY device_id,ii;"""
+        else: #fetch min and max across all different tables     
+            for i in all_tables:
+                qry += f"""SELECT DEVICE_ID, FROM_UNIXTIME(min(TIMESTAMP/1000)) min , FROM_UNIXTIME(max(TIMESTAMP/1000)) max
+                            FROM `{i}` GROUP BY DEVICE_ID UNION """
+            qry = qry[:-6]
+            qry = """WITH t AS ( """ + qry + """ ) SELECT DEVICE_ID, min, max from t GROUP BY DEVICE_ID"""
+        
+        self.cursor.execute(qry)
+        ret = self.cursor.fetchall()
+        return ret
+
+    def get_android_list(self):
+        """Returns a list of device_id that can certainly be associated with android devices (not exhaustive)"""
+        
+        qry = """SELECT DEVICE_ID FROM PHONE_LIGHT UNION SELECT DEVICE_ID FROM PHONE_APPLICATIONS"""
+        self.cursor.execute(qry)
+        ret = self.cursor.fetchall()
+        return [i[0] for i in ret]

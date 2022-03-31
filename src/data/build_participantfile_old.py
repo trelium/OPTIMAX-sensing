@@ -24,7 +24,7 @@ df = df.dropna(subset=['device_id'])
 #Convert dtypes
 df = df.astype({"label": int, "pid": int})
 df['start_date'] = pd.to_datetime(df['start_date'], infer_datetime_format = True)
-df['start_date'] = df['start_date'].dt.round('D') #round to day
+df['start_date'] = df['start_date'].dt.round('D') #round to day #TODO: rounds to next day in some cases
 
 
 

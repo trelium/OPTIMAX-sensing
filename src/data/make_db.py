@@ -95,6 +95,11 @@ def main():
 
     if args.pickle is not None:
         paths_chunks = pickle.load(open(args.pickle,'rb'))
+        perc = int(len(paths_chunks)*40/100)
+        print(len(paths_chunks))
+        print(perc)
+        print(type(paths_chunks))
+        paths_chunks[perc:]
     elif args.paths_file is not None:
         paths_chunks = get_paths_from_file(path = args.paths_file, prefix='/home/jmocel/trelium/OPTIMAX-sensing/data/optimax_ps_data')
     else:

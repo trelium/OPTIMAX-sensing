@@ -74,7 +74,7 @@ def select_datapoints(df, stream_name):
                         })
             acc_new['userid'] = df['userid'][0]
             df = acc_new
-        except ValueError:
+        except: #ValueError was written prior, KeyError is correct for missing key
             logging.error('Inconsistencies in dimension of records for Accelerometer stream')
             df = None
     
